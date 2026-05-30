@@ -1,19 +1,13 @@
 import bcrypt from "bcrypt";
 import { UserRepository } from "../../../domain/repositories/UserRepository";
 import { normalizeKey } from "../../../utils/normalizeKey";
-
-type UpdateUserRequest = {
-  id: string;
-  name?: string;
-  password?: string;
-  active?: boolean;
-};
+import { UpdateUserRequest } from "../../../domain/dtos/users/UpdateUserDTO";
 
 export class UpdateUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(data: UpdateUserRequest) {
-    const userId = normalizeKey(data.id);
+  async execute(id: string, data: UpdateUserRequest) {
+    const userId = normalizeKey(id);
 
     const user = await this.userRepository.findById(userId);
 
@@ -27,10 +21,6 @@ export class UpdateUserUseCase {
 
     if (data.name !== undefined) {
       updateData.name = data.name;
-    }
-
-    if (data.active !== undefined) {
-      updateData.active = data.active;
     }
 
     if (data.password !== undefined && data.password.trim().length > 0) {

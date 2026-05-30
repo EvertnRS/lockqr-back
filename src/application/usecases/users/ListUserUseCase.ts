@@ -1,9 +1,10 @@
+import { GetUserResponse } from "../../../domain/dtos/users/GetUserDTO";
 import { UserRepository } from "../../../domain/repositories/UserRepository";
 
 export class ListUsersUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute() {
+  async execute(): Promise<Array<GetUserResponse>> {
     const users = await this.userRepository.list();
 
     return users.map((user) => ({
@@ -12,7 +13,7 @@ export class ListUsersUseCase {
       name: user.name,
       active: user.active,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      updatedAt: user.updatedAt ?? "",
     }));
   }
 }

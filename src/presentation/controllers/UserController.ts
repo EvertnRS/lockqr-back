@@ -83,10 +83,7 @@ export class UsersController {
       const userRepository = new FirebaseUserRepository();
       const updateUserUseCase = new UpdateUserUseCase(userRepository);
 
-      const result = await updateUserUseCase.execute({
-        id,
-        ...data,
-      });
+      const result = await updateUserUseCase.execute(id, data);
 
       return res.status(200).json(result);
     } catch (error) {

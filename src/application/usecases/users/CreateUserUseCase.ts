@@ -1,18 +1,12 @@
 import bcrypt from "bcrypt";
 import { UserRepository } from "../../../domain/repositories/UserRepository";
 import { normalizeKey } from "../../../utils/normalizeKey";
-
-type CreateUserRequest = {
-  username: string;
-  name: string;
-  password: string;
-  active?: boolean;
-};
+import { CreateUserRequest, CreateUserResponse } from "../../../domain/dtos/users/CreateUserDTO";
 
 export class CreateUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(data: CreateUserRequest) {
+  async execute(data: CreateUserRequest): Promise<CreateUserResponse> {
     const userId = normalizeKey(data.username);
 
     const userAlreadyExists = await this.userRepository.findById(userId);
