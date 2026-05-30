@@ -29,6 +29,12 @@ function handleError(error: unknown, res: Response) {
 export class AccessController {
   async validate(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({
+          message: "Usuário não autenticado",
+        });
+      }
+
       const data = validateAccessSchema.parse(req.body);
 
       const doorRepository = new FirebaseDoorRepository();
@@ -43,9 +49,12 @@ export class AccessController {
         accessLogRepository
       );
 
-      const result = await validateAccessUseCase.execute(data);
+      const result = await validateAccessUseCase.execute({
+        doorId: data.doorId,
+        userId: req.user.id,
+      });
 
-      return res.status(result.allowed ? 200 : 401).json(result);
+      return res.status(result.allowed ? 200 : 403).json(result);
     } catch (error) {
       return handleError(error, res);
     }

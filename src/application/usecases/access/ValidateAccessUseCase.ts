@@ -1,5 +1,3 @@
-import bcrypt from "bcrypt";
-
 import { DoorRepository } from "../../../domain/repositories/DoorRepository";
 import { UserRepository } from "../../../domain/repositories/UserRepository";
 import { PermissionRepository } from "../../../domain/repositories/PermissionRepository";
@@ -18,7 +16,7 @@ export class ValidateAccessUseCase {
 
   async execute(data: ValidateAccessRequest) {
     const doorId = normalizeKey(data.doorId);
-    const userId = normalizeKey(data.username);
+    const userId = normalizeKey(data.userId);
 
     let allowed = false;
     let reason = "Acesso negado";
@@ -74,21 +72,6 @@ export class ValidateAccessUseCase {
 
     if (!hasPermission) {
       reason = "Usuário sem permissão para esta porta";
-      await this.registerLog(doorId, userId, allowed, reason);
-
-      return {
-        allowed,
-        message: reason,
-      };
-    }
-
-    const passwordMatches = await bcrypt.compare(
-      data.password,
-      user.passwordHash
-    );
-
-    if (!passwordMatches) {
-      reason = "Senha incorreta";
       await this.registerLog(doorId, userId, allowed, reason);
 
       return {
