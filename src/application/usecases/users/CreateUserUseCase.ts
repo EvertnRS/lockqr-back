@@ -24,6 +24,7 @@ export class CreateUserUseCase {
       passwordHash,
       active: data.active ?? true,
       createdAt: new Date().toISOString(),
+      role: data.role ?? "user",
     };
 
     await this.userRepository.create(user);
@@ -32,6 +33,7 @@ export class CreateUserUseCase {
       id: user.id,
       username: user.username,
       name: user.name,
+      role: user.role,
       active: user.active,
       createdAt: user.createdAt,
     };
