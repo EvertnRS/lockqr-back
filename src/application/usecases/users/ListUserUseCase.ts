@@ -1,0 +1,18 @@
+import { UserRepository } from "../../../domain/repositories/UserRepository";
+
+export class ListUsersUseCase {
+  constructor(private readonly userRepository: UserRepository) {}
+
+  async execute() {
+    const users = await this.userRepository.list();
+
+    return users.map((user) => ({
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      active: user.active,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    }));
+  }
+}

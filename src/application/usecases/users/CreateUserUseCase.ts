@@ -1,0 +1,45 @@
+import bcrypt from "bcrypt";
+import { UserRepository } from "../../../domain/repositories/UserRepository";
+import { normalizeKey } from "../../../utils/normalizeKey";
+
+type CreateUserRequest = {
+  username: string;
+  name: string;
+  password: string;
+  active?: boolean;
+};
+
+export class CreateUserUseCase {
+  constructor(private readonly userRepository: UserRepository) {}
+
+  async execute(data: CreateUserRequest) {
+    const userId = normalizeKey(data.username);
+
+    const userAlreadyExists = await this.userRepository.findById(userId);
+
+    if (userAlreadyExists) {
+      throw new Error("Usuário já existe");
+    }
+
+    const passwordHash = await bcrypt.hash(data.password, 10);
+
+    const user = {
+      id: userId,
+      username: data.username,
+      name: data.name,
+      passwordHash,
+      active: data.active ?? true,
+      createdAt: new Date().toISOString(),
+    };
+
+    await this.userRepository.create(user);
+
+    return {
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      active: user.active,
+      createdAt: user.createdAt,
+    };
+  }
+}
