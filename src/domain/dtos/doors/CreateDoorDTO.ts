@@ -4,13 +4,15 @@ export type CreateDoorRequest = {
   description?: string;
   location?: string;
   active?: boolean;
+  isOpen?: boolean;
 };
 
 export type CreateDoorResponse = {
-    id: string;
-    name: string;
-    description: string;
-    location: string;
-    active: boolean;
-    createdAt: string;
+  id: string;
+  name: string;
+  description: string;
+  location: string;
+  active: boolean;
+  isOpen: boolean;
+  createdAt: string;
 };

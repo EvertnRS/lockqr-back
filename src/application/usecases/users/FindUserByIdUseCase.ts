@@ -18,6 +18,7 @@ export class FindUserByIdUseCase {
       id: user.id,
       username: user.username,
       name: user.name,
+      role: user.role,
       active: user.active,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt ?? "",

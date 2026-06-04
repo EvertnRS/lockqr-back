@@ -6,6 +6,7 @@ export const createDoorSchema = z.object({
   description: z.string().optional(),
   location: z.string().optional(),
   active: z.boolean().optional(),
+  isOpen: z.boolean().optional(),
 });
 
 export const updateDoorSchema = z
@@ -14,13 +15,15 @@ export const updateDoorSchema = z
     description: z.string().optional(),
     location: z.string().optional(),
     active: z.boolean().optional(),
+    isOpen: z.boolean().optional(),
   })
   .refine(
     (data) =>
       data.name !== undefined ||
       data.description !== undefined ||
       data.location !== undefined ||
-      data.active !== undefined,
+      data.active !== undefined ||
+      data.isOpen !== undefined,
     {
       message: "Informe pelo menos um campo para atualizar",
     }

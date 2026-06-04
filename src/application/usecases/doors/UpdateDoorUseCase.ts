@@ -31,6 +31,10 @@ export class UpdateDoorUseCase {
       updateData.location = data.location;
     }
 
+    if (data.isOpen !== undefined) {
+      updateData.isOpen = data.isOpen;
+    }
+
     await this.doorRepository.update(doorId, updateData);
 
     return {
