@@ -14,7 +14,7 @@ export class FirebaseDoorRepository implements DoorRepository {
       return null;
     }
 
-    return snapshot.val() as Door;
+    return this.normalizeDoor(snapshot.val() as Partial<Door>);
   }
 
   async list(): Promise<Door[]> {
@@ -25,7 +25,7 @@ export class FirebaseDoorRepository implements DoorRepository {
       return [];
     }
 
-    return Object.values(data) as Door[];
+    return Object.values(data).map((door) => this.normalizeDoor(door as Partial<Door>));
   }
 
   async update(id: string, data: Partial<Door>): Promise<void> {
@@ -34,5 +34,18 @@ export class FirebaseDoorRepository implements DoorRepository {
 
   async delete(id: string): Promise<void> {
     await db.ref(`doors/${id}`).remove();
+  }
+
+  private normalizeDoor(door: Partial<Door>): Door {
+    return {
+      id: door.id ?? "",
+      name: door.name ?? "",
+      description: door.description,
+      location: door.location,
+      active: door.active ?? true,
+      isOpen: door.isOpen ?? false,
+      createdAt: door.createdAt ?? new Date().toISOString(),
+      updatedAt: door.updatedAt,
+    };
   }
 }

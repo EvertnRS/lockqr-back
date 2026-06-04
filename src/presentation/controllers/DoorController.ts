@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ZodError } from "zod";
 
 import { FirebaseDoorRepository } from "../../infra/repositories/FirebaseDoorRepository";
+import { FirebasePermissionRepository } from "../../infra/repositories/FirebasePermissionRepository";
 
 import { CreateDoorUseCase } from "../../application/usecases/doors/CreateDoorUseCase";
 import { ListDoorsUseCase } from "../../application/usecases/doors/ListDoorUseCase";
@@ -47,7 +48,7 @@ export class DoorsController {
     }
   }
 
-  async list(req: Request, res: Response) {
+  async list(_req: Request, res: Response) {
     try {
       const doorRepository = new FirebaseDoorRepository();
       const listDoorsUseCase = new ListDoorsUseCase(doorRepository);
@@ -55,6 +56,29 @@ export class DoorsController {
       const result = await listDoorsUseCase.execute();
 
       return res.status(200).json(result);
+    } catch (error) {
+      return handleError(error, res);
+    }
+  }
+
+  async listByUser(req: Request, res: Response) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Usuário não autenticado" });
+      }
+
+      const doorRepository = new FirebaseDoorRepository();
+      const permissionRepository = new FirebasePermissionRepository();
+
+      const allDoors = await doorRepository.list();
+      const filtered: any[] = [];
+
+      for (const door of allDoors) {
+        const has = await permissionRepository.hasPermission(door.id, req.user.id);
+        if (has) filtered.push(door);
+      }
+
+      return res.status(200).json(filtered);
     } catch (error) {
       return handleError(error, res);
     }

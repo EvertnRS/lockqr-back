@@ -4,6 +4,7 @@ export type Door = {
   description?: string;
   location?: string;
   active: boolean;
+  isOpen: boolean;
   createdAt: string;
   updatedAt?: string;
 };

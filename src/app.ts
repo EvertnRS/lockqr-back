@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/users", authMiddleware, roleMiddleware("admin"), usersRoutes);
-app.use("/doors", authMiddleware, roleMiddleware("admin"), doorsRoutes);
+app.use("/doors", authMiddleware, doorsRoutes);
 app.use("/permissions", authMiddleware, roleMiddleware("admin"), permissionRoutes);
 app.use("/access", authMiddleware, accessRoutes);
 
