@@ -14,6 +14,10 @@ export class CreateDoorUseCase {
       throw new Error("Porta já existe");
     }
 
+    if((await this.doorRepository.list()).length >= 10){
+      throw new Error("Limite máximo de portas atingido");
+    }
+
     const door = {
       id: doorId,
       name: data.name,
