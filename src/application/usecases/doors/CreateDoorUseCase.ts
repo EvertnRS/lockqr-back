@@ -14,7 +14,7 @@ export class CreateDoorUseCase {
       throw new Error("Porta já existe");
     }
 
-    if((await this.doorRepository.list()).length >= 10){
+    if((await this.doorRepository.list()).length >= 5){
       throw new Error("Limite máximo de portas atingido");
     }
 
