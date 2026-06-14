@@ -80,6 +80,29 @@ export class ValidateAccessUseCase {
       };
     }
 
+    // Validar senha da porta se ela existe
+    if (door.password) {
+      if (!data.password) {
+        reason = "Senha obrigatória para esta porta";
+        await this.registerLog(doorId, userId, allowed, reason);
+
+        return {
+          allowed,
+          message: reason,
+        };
+      }
+
+      if (data.password !== door.password) {
+        reason = "Senha incorreta";
+        await this.registerLog(doorId, userId, allowed, reason);
+
+        return {
+          allowed,
+          message: reason,
+        };
+      }
+    }
+
     allowed = true;
     reason = "Acesso liberado";
 

@@ -52,6 +52,7 @@ export class AccessController {
       const result = await validateAccessUseCase.execute({
         doorId: data.doorId,
         userId: req.user.id,
+        password: data.password,
       });
 
       return res.status(result.allowed ? 200 : 403).json(result);

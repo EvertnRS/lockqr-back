@@ -23,6 +23,7 @@ export class CreateDoorUseCase {
       name: data.name,
       description: data.description ?? "",
       location: data.location ?? "",
+      password: data.password,
       active: data.active ?? true,
       isOpen: data.isOpen ?? false,
       createdAt: new Date().toISOString(),

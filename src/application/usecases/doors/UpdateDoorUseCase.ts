@@ -31,6 +31,10 @@ export class UpdateDoorUseCase {
       updateData.location = data.location;
     }
 
+    if (data.password !== undefined) {
+      updateData.password = data.password;
+    }
+
     if (data.isOpen !== undefined) {
       updateData.isOpen = data.isOpen;
     }
