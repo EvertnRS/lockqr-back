@@ -5,7 +5,7 @@ export const createDoorSchema = z.object({
   name: z.string().min(3, "O nome da porta deve ter pelo menos 3 caracteres"),
   description: z.string().optional(),
   location: z.string().optional(),
-  password: z.string().min(4, "A senha deve ter pelo menos 4 caracteres").optional(),
+  password: z.string().min(4, "A senha deve ter pelo menos 4 caracteres"),
   active: z.boolean().optional(),
   isOpen: z.boolean().optional(),
 });

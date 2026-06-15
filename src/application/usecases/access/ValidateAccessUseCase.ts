@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { DoorRepository } from "../../../domain/repositories/DoorRepository";
 import { UserRepository } from "../../../domain/repositories/UserRepository";
 import { PermissionRepository } from "../../../domain/repositories/PermissionRepository";
@@ -65,6 +66,31 @@ export class ValidateAccessUseCase {
       };
     }
 
+    if (!door.passwordHash) {
+      reason = "Porta sem senha configurada";
+      await this.registerLog(doorId, userId, allowed, reason);
+
+      return {
+        allowed,
+        message: reason,
+      };
+    }
+
+    const passwordMatches = await bcrypt.compare(
+      data.password,
+      door.passwordHash
+    );
+
+    if (!passwordMatches) {
+      reason = "Senha incorreta";
+      await this.registerLog(doorId, userId, allowed, reason);
+
+      return {
+        allowed,
+        message: reason,
+      };
+    }
+
     const hasPermission = await this.permissionRepository.hasPermission(
       doorId,
       userId
@@ -78,29 +104,6 @@ export class ValidateAccessUseCase {
         allowed,
         message: reason,
       };
-    }
-
-    // Validar senha da porta se ela existe
-    if (door.password) {
-      if (!data.password) {
-        reason = "Senha obrigatória para esta porta";
-        await this.registerLog(doorId, userId, allowed, reason);
-
-        return {
-          allowed,
-          message: reason,
-        };
-      }
-
-      if (data.password !== door.password) {
-        reason = "Senha incorreta";
-        await this.registerLog(doorId, userId, allowed, reason);
-
-        return {
-          allowed,
-          message: reason,
-        };
-      }
     }
 
     allowed = true;

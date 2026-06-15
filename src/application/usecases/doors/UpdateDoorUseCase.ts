@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { Door } from "../../../domain/entities/Door";
 import { DoorRepository } from "../../../domain/repositories/DoorRepository";
 import { normalizeKey } from "../../../utils/normalizeKey";
@@ -32,7 +33,7 @@ export class UpdateDoorUseCase {
     }
 
     if (data.password !== undefined) {
-      updateData.password = data.password;
+      updateData.passwordHash = await bcrypt.hash(data.password, 10);
     }
 
     if (data.isOpen !== undefined) {

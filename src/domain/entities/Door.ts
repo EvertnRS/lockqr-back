@@ -3,7 +3,7 @@ export type Door = {
   name: string;
   description?: string;
   location?: string;
-  password?: string;
+  passwordHash: string;
   active: boolean;
   isOpen: boolean;
   createdAt: string;

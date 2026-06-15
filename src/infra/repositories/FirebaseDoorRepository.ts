@@ -44,6 +44,7 @@ export class FirebaseDoorRepository implements DoorRepository {
       location: door.location,
       active: door.active ?? true,
       isOpen: door.isOpen ?? false,
+      passwordHash: door.passwordHash ?? "",
       createdAt: door.createdAt ?? new Date().toISOString(),
       updatedAt: door.updatedAt,
     };
